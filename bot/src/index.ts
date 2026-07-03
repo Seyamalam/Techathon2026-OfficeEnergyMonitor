@@ -5,9 +5,9 @@ import {
 } from "discord.js"
 
 import { fetchEnergyState } from "./api"
+import { formatAiAlert } from "./ai"
 import { handleBotCommand } from "./commands"
 import { assertConfig, config } from "./config"
-import { formatAlert } from "./formatters"
 
 assertConfig()
 
@@ -74,7 +74,7 @@ async function pollAlerts() {
     }
 
     for (const alert of newAlerts) {
-      await channel.send(formatAlert(alert))
+      await channel.send(await formatAiAlert(alert))
       postedAlertIds.add(alert.id)
     }
   } catch (error) {

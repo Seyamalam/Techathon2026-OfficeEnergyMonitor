@@ -1,5 +1,5 @@
 import { fetchEnergyState, findRoom } from "./api"
-import { formatAiAdvice } from "./ai"
+import { formatAiAdvice, formatAiCommandResponse } from "./ai"
 import {
   formatAlerts,
   formatDevices,
@@ -44,23 +44,33 @@ export async function handleBotCommand(content: string, prefix: string) {
   const state = await fetchEnergyState()
 
   if (command === "status") {
-    return formatStatus(state)
+    const fallback = formatStatus(state)
+
+    return formatAiCommandResponse({ command, fallback, state })
   }
 
   if (command === "usage") {
-    return formatUsage(state)
+    const fallback = formatUsage(state)
+
+    return formatAiCommandResponse({ command, fallback, state })
   }
 
   if (command === "alerts") {
-    return formatAlerts(state)
+    const fallback = formatAlerts(state)
+
+    return formatAiCommandResponse({ command, fallback, state })
   }
 
   if (command === "devices") {
-    return formatDevices(state)
+    const fallback = formatDevices(state)
+
+    return formatAiCommandResponse({ command, fallback, state })
   }
 
   if (command === "offhours") {
-    return formatOffHours(state)
+    const fallback = formatOffHours(state)
+
+    return formatAiCommandResponse({ command, fallback, state })
   }
 
   if (command === "advice") {
@@ -70,14 +80,31 @@ export async function handleBotCommand(content: string, prefix: string) {
   const roomQuery = args.join(" ")
 
   if (!roomQuery) {
-    return `Tell me which room to check: \`${prefix}room drawing\`, \`${prefix}room work1\`, or \`${prefix}room work2\`.`
+    const fallback = `Tell me which room to check: \`${prefix}room drawing\`, \`${prefix}room work1\`, or \`${prefix}room work2\`.`
+
+    return formatAiCommandResponse({ command, fallback, state })
   }
 
   const room = findRoom(state, roomQuery)
 
   if (!room) {
-    return "I couldn't match that room. Try drawing, work1, or work2."
+    const fallback = "I couldn't match that room. Try drawing, work1, or work2."
+
+    return formatAiCommandResponse({
+      command,
+      fallback,
+      state,
+      roomQuery,
+    })
   }
 
-  return formatRoom(room)
+  const fallback = formatRoom(room)
+
+  return formatAiCommandResponse({
+    command,
+    fallback,
+    state,
+    room,
+    roomQuery,
+  })
 }
