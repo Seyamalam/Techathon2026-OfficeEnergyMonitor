@@ -1,0 +1,12 @@
+{
+  "name": "techathon-office-energy-monitor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "install:all": "bun install --cwd dashboard && bun install --cwd bot",
+    "dev:dashboard": "bun run --cwd dashboard dev",
+    "dev:bot": "bun run --cwd bot start",
+    "test:bot": "bun run --cwd bot test:local",
+    "check": "bun run --cwd dashboard lint && bun run --cwd dashboard typecheck && bun run --cwd dashboard build && bun run --cwd bot typecheck"
+  }
+}

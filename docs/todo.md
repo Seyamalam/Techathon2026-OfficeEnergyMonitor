@@ -16,6 +16,7 @@
 - [x] Estimate daily kWh from simulated runtime.
 - [x] Implement alert rules.
 - [x] Add REST API endpoint for shared state.
+- [x] Add AI insight endpoint using OpenRouter with fallback.
 - [ ] Add Socket.IO real-time updates.
 - [ ] Add CORS configuration for dashboard.
 
@@ -31,6 +32,7 @@
 - [x] Add per-room power breakdown.
 - [x] Add device status panel grouped by room.
 - [x] Add active alerts panel.
+- [x] Add AI Energy Coach panel.
 - [x] Make dashboard responsive for demo laptop screens.
 - [x] Polish loading, empty, and disconnected states.
 
@@ -44,6 +46,7 @@
 - [x] Implement `!alerts`.
 - [x] Implement `!devices`.
 - [x] Implement `!offhours`.
+- [x] Implement `!advice`.
 - [x] Humanize responses.
 - [x] Add proactive alert posting to configured channel.
 - [x] Document bot setup and permissions.
@@ -62,16 +65,18 @@
 - [x] Add final setup instructions.
 - [x] Add API endpoint documentation.
 - [x] Add Discord command examples.
+- [x] Add AI integration details.
+- [x] Add attribution for libraries, APIs, assets, and AI assistance.
 - [ ] Add deployment links.
 - [ ] Add screenshots.
 - [ ] Add demo video link.
 - [ ] Add final team contribution breakdown.
-- [ ] Add attribution for libraries, APIs, assets, and AI assistance.
 
 ## Validation
 
 - [x] Confirm dashboard updates without refresh.
 - [x] Confirm Discord bot and dashboard show the same backend state.
+- [x] Confirm AI fallback keeps app runnable without OpenRouter.
 - [ ] Test alert conditions.
 - [ ] Test setup from a fresh clone.
 - [ ] Record a clean 3-minute demo video.

@@ -1,4 +1,5 @@
 import { fetchEnergyState, findRoom } from "./api"
+import { formatAiAdvice } from "./ai"
 import {
   formatAlerts,
   formatDevices,
@@ -16,6 +17,7 @@ const knownCommands = new Set([
   "alerts",
   "devices",
   "offhours",
+  "advice",
   "help",
   "commands",
 ])
@@ -59,6 +61,10 @@ export async function handleBotCommand(content: string, prefix: string) {
 
   if (command === "offhours") {
     return formatOffHours(state)
+  }
+
+  if (command === "advice") {
+    return formatAiAdvice(state)
   }
 
   const roomQuery = args.join(" ")

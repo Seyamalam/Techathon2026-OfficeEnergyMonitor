@@ -101,6 +101,7 @@ export function formatHelp(prefix: string) {
     `\`${prefix}alerts\` - active energy alerts`,
     `\`${prefix}devices\` - every monitored device`,
     `\`${prefix}offhours\` - office-hours check`,
+    `\`${prefix}advice\` - AI energy-saving recommendation`,
   ].join("\n")
 }
 

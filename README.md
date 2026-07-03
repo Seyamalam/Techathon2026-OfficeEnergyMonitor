@@ -37,6 +37,7 @@ This project follows the fixed room/device definition: 15 devices total.
   - `!alerts`
   - `!devices`
   - `!offhours`
+  - `!advice`
 - System architecture diagram.
 - Representative hardware/electrical schematic for one room.
 - Clear setup and run instructions.
@@ -59,6 +60,7 @@ Both the dashboard and Discord bot must read from the same backend state. The bo
 - Discord bot: discord.js
 - Data source: deterministic simulated IoT device layer
 - Hardware concept: Wokwi ESP32 relay/sensing circuit
+- AI: OpenRouter `openrouter/free` for energy recommendations, with deterministic fallback
 
 ## Dashboard Experience
 
@@ -72,6 +74,7 @@ The dashboard includes:
 - Alerts visible at a glance.
 - Device list grouped by room.
 - Analytics page with live trend, room comparison, and fan/light split.
+- AI Energy Coach with OpenRouter-generated recommendations.
 - Discord bot page with command set and live response preview.
 - Architecture page with system and hardware diagrams.
 
@@ -113,6 +116,12 @@ GET /api/state
 
 The dashboard polls this endpoint for demo-safe real-time updates, and the Discord bot reads the same endpoint for command responses.
 
+```text
+GET /api/ai-insight
+```
+
+Returns an AI-generated operational recommendation using OpenRouter when `OPENROUTER_API_KEY` is configured. If the API is unavailable, the endpoint returns a deterministic fallback insight so the demo remains runnable.
+
 ## Alert Rules
 
 - Device on after office hours, assuming office hours are 9:00 AM to 5:00 PM.
@@ -137,6 +146,21 @@ Example commands:
 ```
 
 Bonus behavior: proactively post to a configured channel when a new alert appears.
+
+## AI Integration
+
+The project uses OpenRouter's OpenAI-compatible chat API with the free model router:
+
+```text
+OPENROUTER_MODEL=openrouter/free
+```
+
+AI is used in two places:
+
+- Dashboard: the AI Energy Coach summarizes live office usage and recommends the next operational action.
+- Discord: `!advice` asks the same live backend state for a concise energy-saving recommendation.
+
+The prompt includes current room loads, active devices, office-hours state, kWh estimate, and active alerts. The AI never owns the source of truth; it only explains the simulated IoT state already produced by the backend. If the OpenRouter key is missing or the free endpoint is unavailable, the app uses rule-based fallback advice.
 
 ## Repository Structure
 
@@ -184,9 +208,8 @@ BACKEND_URL=http://localhost:4000
 Run the dashboard:
 
 ```bash
-cd dashboard
-bun install
-bun run dev
+bun run install:all
+bun run dev:dashboard
 ```
 
 Dashboard services:
@@ -209,6 +232,8 @@ Bot environment:
 DISCORD_TOKEN=your_bot_token
 BACKEND_URL=http://127.0.0.1:3000
 DISCORD_CHANNEL_ID=optional_alert_channel_id
+OPENROUTER_API_KEY=optional_openrouter_key
+OPENROUTER_MODEL=openrouter/free
 ```
 
 Bot commands:
@@ -222,7 +247,14 @@ Bot commands:
 !alerts
 !devices
 !offhours
+!advice
 !help
+```
+
+Run checks:
+
+```bash
+bun run check
 ```
 
 ## Diagrams And Hardware
@@ -252,6 +284,19 @@ See [docs/team-contributions.md](docs/team-contributions.md) for details.
 - AI coding assistants are allowed.
 - README must explain setup, architecture, technologies, API endpoints, and AI integration details if used.
 - Final submission includes GitHub link, demo video link, and team details.
+
+## Attribution
+
+- Next.js, React, and TypeScript for the web/backend app.
+- shadcn/ui, Tailwind CSS, and Base UI for interface primitives.
+- Recharts for dashboard visualizations.
+- Tabler Icons for iconography.
+- Sonner for toast notifications.
+- Discord.js for the Discord bot.
+- InstantDB for shared realtime-ready state snapshots.
+- OpenRouter `openrouter/free` for optional AI energy recommendations.
+- Wokwi for the representative ESP32 hardware simulation concept.
+- AI coding assistance was used during implementation and documentation, with code reviewed and tested before submission.
 
 ## Current Status
 

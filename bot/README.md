@@ -10,6 +10,10 @@ Discord bot for the office energy monitor. It reads live data from the same dash
 !room work1
 !room work2
 !usage
+!alerts
+!devices
+!offhours
+!advice
 !help
 ```
 
@@ -34,9 +38,13 @@ Optional:
 DISCORD_CHANNEL_ID=channel_for_proactive_alerts
 BOT_PREFIX=!
 ALERT_POLL_SECONDS=20
+OPENROUTER_API_KEY=optional_openrouter_key
+OPENROUTER_MODEL=openrouter/free
 ```
 
 The bot needs the Discord Message Content intent enabled in the Discord Developer Portal because this prototype uses prefix commands.
+
+`!advice` uses OpenRouter when configured and falls back to rule-based advice when the API key is missing or the free endpoint is unavailable.
 
 ## Local Test Without Discord
 

@@ -11,6 +11,7 @@ const commands = [
   `${config.prefix}alerts`,
   `${config.prefix}devices`,
   `${config.prefix}offhours`,
+  `${config.prefix}advice`,
   `${config.prefix}help`,
 ]
 

@@ -52,6 +52,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { AiEnergyCoach } from "@/components/ai-energy-coach"
 import { OfficeLayoutSvg } from "@/components/office-layout-svg"
 import { initialEnergyState, useEnergyState } from "@/hooks/use-energy-state"
 import { formatRelativeMinutes, formatTime } from "@/lib/format"
@@ -246,6 +247,7 @@ export function LiveEnergyDashboard() {
             </Card>
 
             <AlertsPanel alerts={state.alerts} />
+            <AiEnergyCoach />
             <DiscordPreview state={state} />
           </aside>
         </section>

@@ -18,6 +18,8 @@ export const config = {
   ),
   instantAppId: process.env.INSTANT_APP_ID ?? "",
   instantAdminToken: process.env.INSTANT_APP_ADMIN_TOKEN ?? "",
+  openRouterApiKey: process.env.OPENROUTER_API_KEY ?? "",
+  openRouterModel: process.env.OPENROUTER_MODEL ?? "openrouter/free",
   prefix: process.env.BOT_PREFIX ?? "!",
   alertPollMs: optionalNumber(process.env.ALERT_POLL_SECONDS, 20) * 1000,
 }
