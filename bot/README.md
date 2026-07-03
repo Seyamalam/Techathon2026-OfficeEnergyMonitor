@@ -37,3 +37,21 @@ ALERT_POLL_SECONDS=20
 ```
 
 The bot needs the Discord Message Content intent enabled in the Discord Developer Portal because this prototype uses prefix commands.
+
+## Local Test Without Discord
+
+Run the dashboard first:
+
+```bash
+cd ../dashboard
+bun run dev
+```
+
+Then run:
+
+```bash
+cd ../bot
+bun run test:local
+```
+
+This calls the live backend and prints the replies for `!status`, `!room`, `!usage`, and `!help`.

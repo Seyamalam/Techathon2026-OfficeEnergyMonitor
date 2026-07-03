@@ -4,15 +4,10 @@ import {
   GatewayIntentBits,
 } from "discord.js"
 
-import { fetchEnergyState, findRoom } from "./api"
+import { fetchEnergyState } from "./api"
+import { handleBotCommand } from "./commands"
 import { assertConfig, config } from "./config"
-import {
-  formatAlert,
-  formatHelp,
-  formatRoom,
-  formatStatus,
-  formatUsage,
-} from "./formatters"
+import { formatAlert } from "./formatters"
 
 assertConfig()
 
@@ -36,56 +31,14 @@ client.on(Events.MessageCreate, async (message) => {
     return
   }
 
-  const [commandName = "", ...args] = message.content
-    .slice(config.prefix.length)
-    .trim()
-    .split(/\s+/)
-  const command = commandName.toLowerCase()
-
   try {
-    if (command === "help" || command === "commands") {
-      await message.reply(formatHelp(config.prefix))
+    const reply = await handleBotCommand(message.content, config.prefix)
+
+    if (!reply) {
       return
     }
 
-    if (!["status", "room", "usage"].includes(command)) {
-      await message.reply(
-        `I don't know that command yet. Try \`${config.prefix}help\`.`
-      )
-      return
-    }
-
-    const state = await fetchEnergyState()
-
-    if (command === "status") {
-      await message.reply(formatStatus(state))
-      return
-    }
-
-    if (command === "usage") {
-      await message.reply(formatUsage(state))
-      return
-    }
-
-    const roomQuery = args.join(" ")
-
-    if (!roomQuery) {
-      await message.reply(
-        `Tell me which room to check: \`${config.prefix}room drawing\`, \`${config.prefix}room work1\`, or \`${config.prefix}room work2\`.`
-      )
-      return
-    }
-
-    const room = findRoom(state, roomQuery)
-
-    if (!room) {
-      await message.reply(
-        `I couldn't match that room. Try drawing, work1, or work2.`
-      )
-      return
-    }
-
-    await message.reply(formatRoom(room))
+    await message.reply(reply)
   } catch (error) {
     console.error(error)
     await message.reply(
