@@ -60,7 +60,7 @@ export async function formatAiAdvice(state: EnergyState) {
       headers: {
         Authorization: `Bearer ${config.openRouterApiKey}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://github.com/Seyamalam/Techathon2026-OfficeEnergyMonitor",
+        "HTTP-Referer": "https://github.com/Seyamalam/Techathon2026-Huntrix",
         "X-Title": "Techathon Office Energy Monitor Discord Bot",
       },
       body: JSON.stringify({

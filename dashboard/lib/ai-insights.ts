@@ -125,7 +125,7 @@ export async function getAiInsight(state: EnergyState): Promise<AiInsight> {
       headers: {
         Authorization: `Bearer ${openRouterApiKey}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://github.com/Seyamalam/Techathon2026-OfficeEnergyMonitor",
+        "HTTP-Referer": "https://github.com/Seyamalam/Techathon2026-Huntrix",
         "X-Title": "Techathon Office Energy Monitor",
       },
       body: JSON.stringify({
