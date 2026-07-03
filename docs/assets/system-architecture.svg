@@ -1,58 +1,94 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
-  <title id="title">Office energy monitor system architecture</title>
-  <desc id="desc">Simulated device layer flows into a shared backend API, then the web dashboard and Discord bot read the same state for users.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">Huntrix office energy monitor system architecture</title>
+  <desc id="desc">The office simulator creates frequent random device toggles while real Asia Dhaka time drives the 9 to 5 alert rule. A shared backend API feeds the dashboard, Discord bot, InstantDB snapshot, and OpenRouter AI summaries.</desc>
   <defs>
     <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,8 L11,4 z" fill="#111827"/>
     </marker>
     <style>
-      .bg{fill:#f8fafc}.node{fill:#ffffff;stroke:#cbd5e1;stroke-width:2}.title{font:700 22px system-ui,sans-serif;fill:#0f172a}.body{font:500 15px system-ui,sans-serif;fill:#475569}.label{font:700 13px system-ui,sans-serif;fill:#0369a1}.line{stroke:#111827;stroke-width:4;fill:none;marker-end:url(#arrow)}.pill{fill:#e0f2fe;stroke:#7dd3fc}
+      .bg{fill:#f8fafc}
+      .panel{fill:#ffffff;stroke:#cbd5e1;stroke-width:2}
+      .device{fill:#eff6ff;stroke:#2563eb;stroke-width:2}
+      .backend{fill:#f5f3ff;stroke:#7c3aed;stroke-width:2}
+      .ui{fill:#ecfdf5;stroke:#059669;stroke-width:2}
+      .alert{fill:#fff7ed;stroke:#ea580c;stroke-width:2}
+      .title{font:700 26px system-ui,-apple-system,Segoe UI,sans-serif;fill:#0f172a}
+      .h{font:700 18px system-ui,-apple-system,Segoe UI,sans-serif;fill:#0f172a}
+      .b{font:500 14px system-ui,-apple-system,Segoe UI,sans-serif;fill:#475569}
+      .s{font:700 12px system-ui,-apple-system,Segoe UI,sans-serif;fill:#334155;letter-spacing:.03em}
+      .line{stroke:#111827;stroke-width:3.5;fill:none;marker-end:url(#arrow)}
+      .soft{stroke:#64748b;stroke-width:2.5;fill:none;stroke-dasharray:7 7;marker-end:url(#arrow)}
     </style>
   </defs>
-  <rect class="bg" width="1200" height="620" rx="28"/>
-  <text x="60" y="70" class="title">Lights, Fans, Discord - Shared Backend Architecture</text>
-  <text x="60" y="100" class="body">One source of truth drives both the animated dashboard and Discord bot responses.</text>
 
-  <rect class="node" x="60" y="210" width="230" height="150" rx="18"/>
-  <text x="92" y="255" class="title">Office devices</text>
-  <text x="92" y="288" class="body">3 rooms</text>
-  <text x="92" y="314" class="body">6 fans + 9 lights</text>
-  <text x="92" y="340" class="body">status, watts, timestamps</text>
+  <rect class="bg" width="1400" height="760" rx="30"/>
+  <text x="60" y="72" class="title">Huntrix Office Energy Monitor - Shared Backend Architecture</text>
+  <text x="60" y="104" class="b">One live state contract drives the floor plan, charts, alerts, Discord commands, and AI summaries.</text>
 
-  <rect class="node" x="365" y="210" width="240" height="150" rx="18"/>
-  <text x="397" y="255" class="title">Simulator</text>
-  <text x="397" y="288" class="body">Dynamic state generator</text>
-  <text x="397" y="314" class="body">Office-hours rules</text>
-  <text x="397" y="340" class="body">Alert calculations</text>
+  <rect class="panel" x="50" y="145" width="250" height="330" rx="22"/>
+  <text x="82" y="185" class="h">Office setup</text>
+  <rect class="device" x="78" y="215" width="194" height="62" rx="14"/>
+  <text x="100" y="241" class="h">Drawing Room</text>
+  <text x="100" y="263" class="b">2 fans + 3 lights</text>
+  <rect class="device" x="78" y="302" width="194" height="62" rx="14"/>
+  <text x="100" y="328" class="h">Work Room 1</text>
+  <text x="100" y="350" class="b">2 fans + 3 lights</text>
+  <rect class="device" x="78" y="389" width="194" height="62" rx="14"/>
+  <text x="100" y="415" class="h">Work Room 2</text>
+  <text x="100" y="437" class="b">2 fans + 3 lights</text>
 
-  <rect class="node" x="680" y="210" width="240" height="150" rx="18"/>
-  <text x="712" y="255" class="title">Backend API</text>
-  <text x="712" y="288" class="body">GET /api/state</text>
-  <text x="712" y="314" class="body">InstantDB snapshot</text>
-  <text x="712" y="340" class="body">Single shared contract</text>
+  <rect class="panel" x="360" y="145" width="290" height="330" rx="22"/>
+  <text x="392" y="185" class="h">Simulated IoT layer</text>
+  <rect class="device" x="388" y="215" width="234" height="62" rx="14"/>
+  <text x="410" y="241" class="h">Device definitions</text>
+  <text x="410" y="263" class="b">id, room, type, rated watts</text>
+  <rect class="device" x="388" y="302" width="234" height="62" rx="14"/>
+  <text x="410" y="328" class="h">Random toggle tick</text>
+  <text x="410" y="350" class="b">visible changes about every 1.5s</text>
+  <rect class="device" x="388" y="389" width="234" height="62" rx="14"/>
+  <text x="410" y="415" class="h">Asia/Dhaka clock</text>
+  <text x="410" y="437" class="b">real time, 9 to 5 rule</text>
 
-  <rect class="node" x="990" y="120" width="160" height="120" rx="18"/>
-  <text x="1018" y="165" class="title">Dashboard</text>
-  <text x="1018" y="198" class="body">SVG map</text>
-  <text x="1018" y="222" class="body">charts + alerts</text>
+  <rect class="panel" x="710" y="145" width="300" height="330" rx="22"/>
+  <text x="742" y="185" class="h">Single backend</text>
+  <rect class="backend" x="738" y="215" width="244" height="62" rx="14"/>
+  <text x="760" y="241" class="h">GET /api/state</text>
+  <text x="760" y="263" class="b">fresh EnergyState JSON</text>
+  <rect class="alert" x="738" y="302" width="244" height="62" rx="14"/>
+  <text x="760" y="328" class="h">Alert rules</text>
+  <text x="760" y="350" class="b">after-hours, high-load, all-on</text>
+  <rect class="backend" x="738" y="389" width="244" height="62" rx="14"/>
+  <text x="760" y="415" class="h">InstantDB + OpenRouter</text>
+  <text x="760" y="437" class="b">optional snapshot and AI text</text>
 
-  <rect class="node" x="990" y="330" width="160" height="120" rx="18"/>
-  <text x="1018" y="375" class="title">Discord bot</text>
-  <text x="1018" y="408" class="body">!status !room</text>
-  <text x="1018" y="432" class="body">proactive alerts</text>
+  <rect class="panel" x="1070" y="95" width="280" height="235" rx="22"/>
+  <text x="1102" y="135" class="h">Web dashboard</text>
+  <rect class="ui" x="1098" y="165" width="224" height="52" rx="14"/>
+  <text x="1120" y="197" class="b">SVG floor plan animations</text>
+  <rect class="ui" x="1098" y="235" width="224" height="52" rx="14"/>
+  <text x="1120" y="267" class="b">Metrics, charts, alerts, hardware</text>
 
-  <path class="line" d="M290 285 H350"/>
-  <path class="line" d="M605 285 H665"/>
-  <path class="line" d="M920 255 C955 210 952 182 978 180"/>
-  <path class="line" d="M920 315 C955 360 952 388 978 390"/>
+  <rect class="panel" x="1070" y="400" width="280" height="235" rx="22"/>
+  <text x="1102" y="440" class="h">Discord bot</text>
+  <rect class="ui" x="1098" y="470" width="224" height="52" rx="14"/>
+  <text x="1120" y="502" class="b">!status !room !usage !advice</text>
+  <rect class="alert" x="1098" y="540" width="224" height="52" rx="14"/>
+  <text x="1120" y="572" class="b">proactive alert posts</text>
 
-  <rect class="pill" x="690" y="430" width="230" height="44" rx="22"/>
-  <text x="805" y="458" text-anchor="middle" class="label">same live JSON payload</text>
-  <path class="line" d="M800 360 V418"/>
+  <rect class="panel" x="395" y="565" width="530" height="98" rx="22"/>
+  <text x="430" y="604" class="h">Shared state payload</text>
+  <text x="430" y="632" class="b">generatedAt, simulatedClock, rooms, devices, watts, estimated kWh, active alerts</text>
 
-  <rect class="node" x="475" y="470" width="250" height="78" rx="16"/>
-  <text x="505" y="505" class="title">User</text>
-  <text x="505" y="532" class="body">Checks browser or Discord</text>
-  <path class="line" d="M990 240 C890 520 770 510 740 510"/>
-  <path class="line" d="M990 390 C900 545 780 530 740 520"/>
+  <path class="line" d="M300 310 H345"/>
+  <path class="line" d="M650 310 H695"/>
+  <path class="line" d="M860 475 V552"/>
+  <path class="line" d="M1010 260 H1055"/>
+  <path class="line" d="M1010 385 C1035 445 1045 500 1055 515"/>
+  <path class="soft" d="M1210 330 V390"/>
+  <path class="soft" d="M1210 400 V350"/>
+
+  <text x="315" y="292" class="s">15 devices</text>
+  <text x="665" y="292" class="s">state build</text>
+  <text x="1032" y="242" class="s">polls 1.5s</text>
+  <text x="1032" y="495" class="s">same API</text>
 </svg>

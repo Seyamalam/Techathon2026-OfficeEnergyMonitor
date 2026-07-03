@@ -28,12 +28,13 @@ flowchart LR
 
   subgraph simulator["Simulated Device Layer"]
     defs["Device definitions<br/>id, room, type, ratedWatts"]:::device
-    clock["Time-cycle simulator<br/>status + lastChanged + onSince"]:::device
+    clock["Real Asia/Dhaka clock<br/>9 to 5 office-hours rule"]:::device
+    toggles["Random toggle tick<br/>lights/fans change every ~1.5s"]:::device
     payload["EnergyState JSON<br/>15 devices, 3 room summaries, usage"]:::device
   end
 
   subgraph backend["Single Backend / Source Of Truth"]
-    api["Next.js API<br/>GET /api/state"]:::backend
+    api["Next.js API<br/>GET /api/state, no-store"]:::backend
     rules["Alert rules<br/>after hours, high load, all-on runtime"]:::alert
     instant["InstantDB snapshot<br/>optional realtime cache"]:::backend
     aiRoute["AI insight API<br/>OpenRouter-backed summaries"]:::backend
@@ -56,7 +57,9 @@ flowchart LR
   DR --> defs
   W1 --> defs
   W2 --> defs
-  defs --> clock --> payload --> api
+  defs --> toggles
+  clock --> rules
+  toggles --> payload --> api
   api --> rules
   api --> instant
   api --> aiRoute
@@ -148,12 +151,13 @@ flowchart LR
   end
 
   subgraph api["Next.js Backend Routes"]
-    stateApi["GET /api/state<br/>returns EnergyState"]:::server
+    stateApi["GET /api/state<br/>returns fresh EnergyState"]:::server
     aiApi["POST /api/ai-insight<br/>OpenRouter summary"]:::server
   end
 
   subgraph state["State Construction"]
-    simulator["energy-simulator.ts<br/>device cycles + wattage"]:::data
+    simulator["energy-simulator.ts<br/>1.5s random toggle ticks"]:::data
+    dhakaClock["Asia/Dhaka clock<br/>9 to 5 schedule"]:::data
     alertsEngine["alert builder<br/>after-hours + high-load + all-on"]:::alert
     instantAdmin["instant-admin.ts<br/>writes current snapshot"]:::server
   end
@@ -170,13 +174,18 @@ flowchart LR
   browser --> hardware
   browser --> botPage
 
-  home --> instant
-  devices --> instant
-  alerts --> instant
-  analytics --> instant
+  home --> poll["useEnergyState<br/>polls every 1.5s"]:::client
+  devices --> poll
+  alerts --> poll
+  analytics --> poll
+  poll --> instant
   instant -. fallback if unavailable .-> stateApi
 
-  stateApi --> simulator --> alertsEngine --> instantAdmin --> instant
+  stateApi --> simulator
+  stateApi --> dhakaClock
+  simulator --> alertsEngine
+  dhakaClock --> alertsEngine
+  alertsEngine --> instantAdmin --> instant
   aiApi --> stateApi
   aiApi --> openrouter["OpenRouter<br/>friendly recommendations"]:::server
 `
@@ -191,15 +200,15 @@ sequenceDiagram
   participant LLM as OpenRouter LLM
   participant Channel as Alert Channel
 
-  Boss->>Discord: !status / !room / !usage / !alerts / !devices
+  Boss->>Discord: !status / !room / !usage / !alerts / !devices / !advice
   Discord->>Bot: MESSAGE_CREATE with content
   Bot->>Bot: parse prefix command
   Bot->>API: GET /api/state
-  API-->>Bot: EnergyState with rooms, devices, alerts
+  API-->>Bot: Fresh EnergyState with random toggles + Dhaka clock
   Bot->>Bot: build deterministic factual fallback
   alt OpenRouter key configured
-    Bot->>LLM: grounded prompt + deterministic answer
-    LLM-->>Bot: concise Discord markdown
+    Bot->>LLM: live facts + natural-language request
+    LLM-->>Bot: natural Discord markdown
     Bot->>Bot: sanitize markdown, remove draft leakage, fallback if invalid
   else LLM unavailable
     Bot->>Bot: use deterministic formatter
@@ -238,6 +247,8 @@ flowchart LR
   env --> bot
   app --> api["/api/state + /api/ai-insight"]:::runtime
   bot --> api
+  api --> db["InstantDB optional snapshot"]:::runtime
+  api --> llm["OpenRouter optional LLM"]:::runtime
 `
 
 const repoBase = "https://github.com/Seyamalam/Techathon2026-Huntrix/blob/main"

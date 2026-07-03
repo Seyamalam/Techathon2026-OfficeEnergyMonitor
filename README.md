@@ -49,9 +49,222 @@ This project follows the fixed room/device definition: 15 devices total.
 
 ## Target Architecture
 
-![System architecture](docs/assets/system-architecture.svg)
+Both the dashboard and Discord bot read from the same backend state. The bot does not generate independent random data.
 
-Both the dashboard and Discord bot must read from the same backend state. The bot must not generate independent random data.
+```mermaid
+flowchart LR
+  subgraph Office["Office Setup"]
+    DR["Drawing Room<br/>2 fans + 3 lights"]
+    W1["Work Room 1<br/>2 fans + 3 lights"]
+    W2["Work Room 2<br/>2 fans + 3 lights"]
+  end
+
+  subgraph Simulator["Simulated IoT Layer"]
+    Defs["Device definitions<br/>id, room, type, rated watts"]
+    Tick["Deterministic random toggle tick<br/>changes about every 1.5s"]
+    Clock["Real Asia/Dhaka clock<br/>9 to 5 office-hours rule"]
+    State["EnergyState JSON<br/>15 devices, room summaries, watts, alerts"]
+  end
+
+  subgraph Backend["Single Backend / Source Of Truth"]
+    API["Next.js GET /api/state<br/>fresh no-store response"]
+    AlertRules["Alert rules<br/>after-hours, high load, all-on runtime"]
+    Instant["InstantDB snapshot<br/>optional realtime cache"]
+    Insight["POST /api/ai-insight<br/>OpenRouter summary"]
+  end
+
+  subgraph Dashboard["Web Dashboard"]
+    Floor["SVG floor plan<br/>glowing lights + spinning fans"]
+    Cards["Metrics, room cards, device table"]
+    Charts["Recharts analytics"]
+    Hardware["Wokwi hardware preview"]
+  end
+
+  subgraph Discord["Discord Interface"]
+    Bot["discord.js bot"]
+    Commands["!status !room !usage !alerts !devices !offhours !advice"]
+    Proactive["Proactive alert posts"]
+    LLM["OpenRouter response humanizer"]
+  end
+
+  DR --> Defs
+  W1 --> Defs
+  W2 --> Defs
+  Defs --> Tick --> State --> API
+  Clock --> AlertRules
+  API --> AlertRules
+  API --> Instant
+  API --> Insight
+  Instant --> Floor
+  Instant --> Cards
+  Instant --> Charts
+  API --> Hardware
+  API --> Bot
+  Bot --> Commands
+  Bot --> Proactive
+  Bot --> LLM --> Commands
+  AlertRules --> Proactive
+```
+
+## Runtime Data Flow
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant Browser as Web Dashboard
+  participant API as Next.js /api/state
+  participant Sim as energy-simulator.ts
+  participant DB as InstantDB Snapshot
+  participant Bot as Discord Bot
+  participant LLM as OpenRouter
+
+  loop every 1.5 seconds
+    Browser->>API: fetch fresh state
+    API->>Sim: build current state
+    Sim-->>API: random device toggles + real Dhaka clock
+    API-->>Browser: EnergyState JSON
+    API-->>DB: optional current snapshot sync
+    Browser->>Browser: update floor plan, cards, bars, alerts
+  end
+
+  Bot->>API: fetch same state for command
+  API-->>Bot: EnergyState JSON
+  Bot->>Bot: build factual fallback
+  Bot->>LLM: send live facts for natural wording
+  LLM-->>Bot: Discord markdown response
+```
+
+## Web Dashboard Architecture
+
+```mermaid
+flowchart LR
+  Browser["Browser<br/>Next.js App Router UI"]
+
+  subgraph Pages["Dashboard Pages"]
+    Home["/<br/>floor plan + live metrics"]
+    Devices["/devices<br/>device registry"]
+    Alerts["/alerts<br/>alert center"]
+    Analytics["/analytics<br/>charts"]
+    Architecture["/architecture<br/>Mermaid diagrams"]
+    Hardware["/hardware<br/>Wokwi preview"]
+    BotPage["/bot<br/>command guide"]
+  end
+
+  subgraph API["Next.js Backend Routes"]
+    StateAPI["GET /api/state<br/>fresh EnergyState"]
+    AiAPI["POST /api/ai-insight<br/>OpenRouter summary"]
+  end
+
+  subgraph State["State Construction"]
+    Simulator["energy-simulator.ts<br/>1.5s random toggle ticks"]
+    Dhaka["Asia/Dhaka clock<br/>9 to 5 rule"]
+    Rules["alert builder<br/>after-hours + high-load + all-on"]
+    InstantAdmin["instant-admin.ts<br/>optional snapshot writer"]
+  end
+
+  Instant["InstantDB<br/>optional snapshots"]
+
+  Browser --> Home
+  Browser --> Devices
+  Browser --> Alerts
+  Browser --> Analytics
+  Browser --> Architecture
+  Browser --> Hardware
+  Browser --> BotPage
+
+  Home --> Poll["useEnergyState<br/>polls every 1.5s"]
+  Devices --> Poll
+  Alerts --> Poll
+  Analytics --> Poll
+  Poll --> Instant
+  Instant -. fallback .-> StateAPI
+  StateAPI --> Simulator --> Rules
+  StateAPI --> Dhaka --> Rules
+  Rules --> InstantAdmin --> Instant
+  AiAPI --> StateAPI
+```
+
+## Discord Bot And AI Flow
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant User as Discord User
+  participant Discord as Discord Gateway
+  participant Bot as Huntrix Bot
+  participant API as Shared Backend API
+  participant LLM as OpenRouter
+  participant Channel as Alert Channel
+
+  User->>Discord: !status / !room / !usage / !alerts / !devices / !advice
+  Discord->>Bot: MESSAGE_CREATE
+  Bot->>API: GET /api/state
+  API-->>Bot: Fresh EnergyState
+  Bot->>Bot: Build factual fallback
+  alt OpenRouter configured
+    Bot->>LLM: Live facts only
+    LLM-->>Bot: Natural Discord markdown
+    Bot->>Bot: Sanitize and validate
+  else LLM unavailable
+    Bot->>Bot: Use deterministic formatter
+  end
+  Bot-->>Discord: Reply
+
+  loop alert polling
+    Bot->>API: GET /api/state
+    API-->>Bot: Current alerts
+    alt new alert
+      Bot->>LLM: Humanize alert text
+      Bot-->>Channel: Proactive alert post
+    end
+  end
+```
+
+## Hardware Concept Diagram
+
+```mermaid
+flowchart TB
+  subgraph Room["Representative Drawing Room Circuit"]
+    SW["5 safe state inputs<br/>2 fan switches + 3 light switches"]
+    ESP["ESP32 DevKit<br/>reads state, writes JSON telemetry"]
+    Relay["5 relay/contactor channels<br/>GPIO 16,17,18,19,21"]
+    Loads["Room loads<br/>Fan 1, Fan 2, Light 1, Light 2, Light 3"]
+    Sense["Optional ACS712<br/>aggregate current sensing"]
+  end
+
+  SW --> ESP
+  ESP --> Relay --> Loads
+  Loads --> Sense --> ESP
+  ESP --> Serial["Serial JSON<br/>id, status, watts, ratedWatts"]
+  Serial --> API["Backend state contract"]
+
+  Safety["Real AC wiring needs certified relays, fuses, isolation, and qualified review.<br/>Wokwi uses switches and LEDs as safe stand-ins."]
+  Safety -.-> Relay
+```
+
+## Deployment Diagram
+
+```mermaid
+flowchart LR
+  Repo["GitHub repo<br/>Techathon2026-Huntrix"]
+  Root["Vercel project root<br/>dashboard/"]
+  Install["Install<br/>bun install"]
+  Build["Build<br/>bun run build"]
+  App["Public dashboard<br/>Vercel"]
+  Bot["Discord bot<br/>local/server process"]
+  Env["Environment variables<br/>OpenRouter, InstantDB, Discord, backend URL"]
+  API["/api/state + /api/ai-insight"]
+  DB["InstantDB optional snapshot"]
+  LLM["OpenRouter optional LLM"]
+
+  Repo --> Root --> Install --> Build --> App
+  Env --> App
+  Env --> Bot
+  App --> API
+  Bot --> API
+  API --> DB
+  API --> LLM
+```
 
 ## Tech Stack
 
@@ -62,7 +275,7 @@ Both the dashboard and Discord bot must read from the same backend state. The bo
 - Animation: CSS/SVG animations
 - Shared state: Next.js API route with InstantDB snapshot support
 - Discord bot: discord.js
-- Data source: deterministic simulated IoT device layer
+- Data source: deterministic random simulated IoT device layer with frequent visible toggles
 - Hardware concept: Wokwi ESP32 relay/sensing circuit
 - AI: OpenRouter `openrouter/free` for energy recommendations, with deterministic fallback
 
@@ -110,7 +323,7 @@ type Device = {
 };
 ```
 
-The simulator updates device states over time and serves the full state through the shared backend endpoint.
+The simulator keeps real Asia/Dhaka time for office-hours rules, while device states use deterministic random toggles about every 1.5 seconds so dashboard changes are visible during a short demo.
 
 ## API
 
@@ -268,6 +481,7 @@ bun run check
 - Hardware explanation: [docs/hardware-schematic.md](docs/hardware-schematic.md)
 - Wokwi representative circuit: [wokwi/diagram.json](wokwi/diagram.json)
 - Wokwi sketch: [wokwi/sketch.ino](wokwi/sketch.ino)
+- Live Mermaid diagrams: [`dashboard/app/architecture/page.tsx`](dashboard/app/architecture/page.tsx)
 
 ## Team Contributions
 
