@@ -40,7 +40,7 @@ export default function HardwarePage() {
         </div>
       </header>
 
-      <section className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
+      <section className="flex flex-col gap-5">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -52,20 +52,16 @@ export default function HardwarePage() {
               device id, room, type, status, watts, ratedWatts.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-5">
             <WokwiCircuitPreview />
-          </CardContent>
-        </Card>
 
-        <div className="flex flex-col gap-5">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pin mapping</CardTitle>
-              <CardDescription>
-                Matches `wokwi/diagram.json` and `wokwi/sketch.ino`.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <div className="rounded-lg border">
+              <div className="border-b px-4 py-3">
+                <div className="font-medium">Pin mapping</div>
+                <div className="text-sm text-muted-foreground">
+                  Matches `wokwi/diagram.json` and `wokwi/sketch.ino`.
+                </div>
+              </div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -92,24 +88,26 @@ export default function HardwarePage() {
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Repository files</CardTitle>
-              <CardDescription>
-                Use these for the hardware deliverable.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm">
+        <Card>
+          <CardHeader>
+            <CardTitle>Repository files</CardTitle>
+            <CardDescription>
+              Use these for the hardware deliverable.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3 text-sm md:grid-cols-2 xl:grid-cols-4">
               <FileLine path="wokwi/diagram.json" />
               <FileLine path="wokwi/sketch.ino" />
               <FileLine path="docs/hardware-schematic.md" />
               <FileLine path="docs/assets/one-room-hardware-schematic.svg" />
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </section>
     </main>
   )
