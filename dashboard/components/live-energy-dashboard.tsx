@@ -51,7 +51,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AiEnergyCoach } from "@/components/ai-energy-coach"
 import { OfficeLayoutSvg } from "@/components/office-layout-svg"
 import { initialEnergyState, useEnergyState } from "@/hooks/use-energy-state"
@@ -149,33 +148,14 @@ export function LiveEnergyDashboard() {
 
         <section className="grid gap-5 xl:grid-cols-[1fr_410px]">
           <div className="flex flex-col gap-5">
+            <OfficeMap rooms={state.rooms} />
             <ControlCard
               activeRatio={activeRatio}
               estimatedTodayKwh={state.estimatedTodayKwh}
               generatedAt={state.generatedAt}
               isAfterHours={state.isAfterHours}
             />
-
-            <Tabs defaultValue="layout" className="gap-4">
-              <TabsList>
-                <TabsTrigger value="layout">
-                  <IconLayoutDashboard data-icon="inline-start" />
-                  Layout
-                </TabsTrigger>
-                <TabsTrigger value="devices">
-                  <IconPlugConnected data-icon="inline-start" />
-                  Devices
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="layout">
-                <OfficeMap rooms={state.rooms} />
-              </TabsContent>
-
-              <TabsContent value="devices">
-                <DeviceTable rooms={state.rooms} />
-              </TabsContent>
-            </Tabs>
+            <DeviceTable rooms={state.rooms} />
           </div>
 
           <aside className="flex flex-col gap-5">

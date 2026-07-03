@@ -37,6 +37,7 @@ type RoomBlueprint = {
   id: RoomId
   label: string
   centerX: number
+  labelY: number
   lights: DevicePoint[]
   fans: DevicePoint[]
 }
@@ -45,43 +46,46 @@ const rooms: RoomBlueprint[] = [
   {
     id: "drawing-room",
     label: "Drawing Room",
-    centerX: 160,
+    centerX: 145,
+    labelY: 160,
     lights: [
-      { id: "drawing-room-light-1", label: "Light 1", x: 80, y: 90 },
-      { id: "drawing-room-light-2", label: "Light 2", x: 240, y: 90 },
-      { id: "drawing-room-light-3", label: "Light 3", x: 160, y: 330 },
+      { id: "drawing-room-light-1", label: "Light 1", x: 90, y: 85 },
+      { id: "drawing-room-light-2", label: "Light 2", x: 200, y: 85 },
+      { id: "drawing-room-light-3", label: "Light 3", x: 145, y: 360 },
     ],
     fans: [
-      { id: "drawing-room-fan-1", label: "Fan 1", x: 160, y: 130 },
-      { id: "drawing-room-fan-2", label: "Fan 2", x: 160, y: 250 },
+      { id: "drawing-room-fan-1", label: "Fan 1", x: 145, y: 115 },
+      { id: "drawing-room-fan-2", label: "Fan 2", x: 145, y: 275 },
     ],
   },
   {
     id: "work-room-1",
     label: "Work Room 1",
-    centerX: 445,
+    centerX: 385,
+    labelY: 215,
     lights: [
-      { id: "work-room-1-light-1", label: "Light 1", x: 350, y: 90 },
-      { id: "work-room-1-light-2", label: "Light 2", x: 540, y: 90 },
-      { id: "work-room-1-light-3", label: "Light 3", x: 445, y: 330 },
+      { id: "work-room-1-light-1", label: "Light 1", x: 330, y: 85 },
+      { id: "work-room-1-light-2", label: "Light 2", x: 440, y: 85 },
+      { id: "work-room-1-light-3", label: "Light 3", x: 385, y: 360 },
     ],
     fans: [
-      { id: "work-room-1-fan-1", label: "Fan 1", x: 445, y: 130 },
-      { id: "work-room-1-fan-2", label: "Fan 2", x: 445, y: 250 },
+      { id: "work-room-1-fan-1", label: "Fan 1", x: 385, y: 115 },
+      { id: "work-room-1-fan-2", label: "Fan 2", x: 385, y: 275 },
     ],
   },
   {
     id: "work-room-2",
     label: "Work Room 2",
-    centerX: 735,
+    centerX: 640,
+    labelY: 215,
     lights: [
-      { id: "work-room-2-light-1", label: "Light 1", x: 640, y: 90 },
-      { id: "work-room-2-light-2", label: "Light 2", x: 830, y: 90 },
-      { id: "work-room-2-light-3", label: "Light 3", x: 735, y: 330 },
+      { id: "work-room-2-light-1", label: "Light 1", x: 585, y: 85 },
+      { id: "work-room-2-light-2", label: "Light 2", x: 695, y: 85 },
+      { id: "work-room-2-light-3", label: "Light 3", x: 640, y: 360 },
     ],
     fans: [
-      { id: "work-room-2-fan-1", label: "Fan 1", x: 735, y: 130 },
-      { id: "work-room-2-fan-2", label: "Fan 2", x: 735, y: 250 },
+      { id: "work-room-2-fan-1", label: "Fan 1", x: 640, y: 115 },
+      { id: "work-room-2-fan-2", label: "Fan 2", x: 640, y: 275 },
     ],
   },
 ]
@@ -132,10 +136,52 @@ export function OfficeLayoutSvg({ rooms: liveRooms }: { rooms: RoomSummary[] }) 
         <svg
           role="img"
           aria-label="Live office IoT blueprint map"
-          viewBox="0 0 900 480"
+          viewBox="0 0 800 540"
           className="h-auto w-full"
         >
           <defs>
+            <pattern
+              id="office-grid-floor"
+              width="20"
+              height="20"
+              patternUnits="userSpaceOnUse"
+            >
+              <rect width="20" height="20" fill="var(--office-wr1-floor)" />
+              <path
+                d="M20 0 L0 0 0 20"
+                fill="none"
+                stroke="var(--office-wr1-grid)"
+                strokeWidth="0.5"
+              />
+            </pattern>
+            <pattern
+              id="office-wood-floor"
+              width="40"
+              height="15"
+              patternUnits="userSpaceOnUse"
+            >
+              <rect width="40" height="15" fill="var(--office-wr2-floor)" />
+              <path
+                d="M0 15 L40 15"
+                fill="none"
+                stroke="var(--office-wood-line)"
+                strokeWidth="0.5"
+              />
+            </pattern>
+            <pattern
+              id="office-tile-floor"
+              width="30"
+              height="30"
+              patternUnits="userSpaceOnUse"
+            >
+              <rect width="30" height="30" fill="var(--office-corridor-floor)" />
+              <path
+                d="M30 0 L0 0 0 30"
+                fill="none"
+                stroke="var(--office-tile-line)"
+                strokeWidth="0.5"
+              />
+            </pattern>
             <radialGradient id="office-beam-glow" cx="50%" cy="50%" r="50%">
               <stop
                 offset="0%"
@@ -155,9 +201,9 @@ export function OfficeLayoutSvg({ rooms: liveRooms }: { rooms: RoomSummary[] }) 
             </radialGradient>
           </defs>
 
-          <rect width="900" height="480" fill="var(--office-map-bg)" />
-          <BlueprintGrid />
+          <rect width="800" height="540" fill="var(--office-map-bg)" />
           <Architecture />
+          <Furnishings />
 
           {rooms.map((room) => (
             <RoomLayer
@@ -191,47 +237,183 @@ export function OfficeLayoutSvg({ rooms: liveRooms }: { rooms: RoomSummary[] }) 
   )
 }
 
-function BlueprintGrid() {
+function Architecture() {
   return (
-    <g stroke="var(--office-map-grid)" strokeWidth="1">
-      <path d="M0,60 H900 M0,120 H900 M0,180 H900 M0,240 H900 M0,300 H900 M0,360 H900 M0,420 H900" />
-      <path d="M100,0 V480 M200,0 V480 M300,0 V480 M400,0 V480 M500,0 V480 M600,0 V480 M700,0 V480 M800,0 V480" />
+    <>
+      <rect
+        x="20"
+        y="20"
+        width="760"
+        height="500"
+        rx="3"
+        fill="var(--office-map-wall)"
+      />
+      <rect x="30" y="30" width="230" height="370" fill="var(--office-dr-floor)" />
+      <rect x="270" y="30" width="230" height="370" fill="url(#office-grid-floor)" />
+      <rect x="510" y="30" width="260" height="370" fill="url(#office-wood-floor)" />
+      <rect x="30" y="410" width="740" height="100" fill="url(#office-tile-floor)" />
+
+      <rect x="215" y="400" width="40" height="10" fill="url(#office-tile-floor)" />
+      <rect x="280" y="400" width="40" height="10" fill="url(#office-tile-floor)" />
+      <rect x="520" y="400" width="40" height="10" fill="url(#office-tile-floor)" />
+      <rect x="380" y="510" width="40" height="10" fill="var(--office-map-bg)" />
+
+      <g
+        stroke="var(--office-door-stroke)"
+        strokeWidth="1.5"
+        fill="var(--office-door-fill)"
+      >
+        <path d="M255 400 L255 360 A40 40 0 0 0 215 400" />
+        <path d="M280 400 L280 360 A40 40 0 0 1 320 400" />
+        <path d="M520 400 L520 360 A40 40 0 0 1 560 400" />
+        <path d="M420 510 L420 470 A40 40 0 0 0 380 510" />
+      </g>
+      <g
+        stroke="var(--office-door-stroke)"
+        strokeWidth="3"
+        strokeLinecap="round"
+      >
+        <line x1="255" y1="400" x2="255" y2="360" />
+        <line x1="280" y1="400" x2="280" y2="360" />
+        <line x1="520" y1="400" x2="520" y2="360" />
+        <line x1="420" y1="510" x2="420" y2="470" />
+      </g>
+
+      <g fill="var(--office-window-color)" stroke="var(--office-window-stroke)">
+        <rect x="20" y="100" width="10" height="50" />
+        <rect x="100" y="20" width="60" height="10" />
+        <rect x="350" y="20" width="60" height="10" />
+        <rect x="600" y="20" width="60" height="10" />
+        <rect x="770" y="200" width="10" height="60" />
+      </g>
+      <g stroke="var(--office-window-highlight)" strokeWidth="1.5">
+        <line x1="25" y1="100" x2="25" y2="150" />
+        <line x1="100" y1="25" x2="160" y2="25" />
+        <line x1="350" y1="25" x2="410" y2="25" />
+        <line x1="600" y1="25" x2="660" y2="25" />
+        <line x1="775" y1="200" x2="775" y2="260" />
+      </g>
+
+      <text
+        x="400"
+        y="535"
+        fontSize="12"
+        fontWeight="700"
+        fill="var(--office-map-label)"
+        textAnchor="middle"
+      >
+        ENTRY
+      </text>
+      <path
+        d="M400 520 L395 525 L405 525 Z M399 525 L401 525 L401 530 L399 530 Z"
+        fill="var(--office-map-label)"
+      />
+    </>
+  )
+}
+
+function Furnishings() {
+  return (
+    <>
+      <g fill="var(--office-rug)" stroke="var(--office-furniture-stroke)">
+        <rect x="90" y="180" width="110" height="130" rx="5" />
+      </g>
+      <rect x="135" y="200" width="30" height="70" fill="var(--office-table)" rx="3" />
+      <path
+        d="M45 150 L75 150 L75 300 L120 300 L120 330 L45 330 Z"
+        fill="var(--office-sofa)"
+        stroke="var(--office-sofa-stroke)"
+        strokeWidth="1.5"
+      />
+      <g stroke="var(--office-sofa-stroke)" strokeWidth="1.5">
+        <line x1="45" y1="210" x2="75" y2="210" />
+        <line x1="45" y1="270" x2="75" y2="270" />
+        <line x1="75" y1="300" x2="120" y2="300" />
+      </g>
+      <g transform="translate(60 370) rotate(-45)">
+        <rect
+          x="-15"
+          y="-15"
+          width="30"
+          height="35"
+          rx="4"
+          fill="var(--office-sofa)"
+          stroke="var(--office-sofa-stroke)"
+          strokeWidth="1.5"
+        />
+        <rect x="-10" y="-10" width="20" height="20" rx="2" fill="var(--office-cushion)" />
+      </g>
+
+      <DeskLeft x={330} y={140} />
+      <DeskRight x={440} y={140} />
+      <DeskLeft x={330} y={290} />
+      <DeskRight x={440} y={290} />
+      <DeskLeft x={585} y={140} />
+      <DeskRight x={695} y={140} />
+      <DeskLeft x={585} y={290} />
+      <DeskRight x={695} y={290} />
+
+      <Plant x={50} y={60} />
+      <Plant x={240} y={340} />
+      <Plant x={290} y={215} />
+      <Plant x={480} y={215} />
+      <Plant x={530} y={175} />
+      <Plant x={750} y={380} />
+      <Plant x={50} y={440} />
+      <Plant x={670} y={470} />
+
+      <g transform="translate(730 470)">
+        <rect x="-10" y="-10" width="20" height="25" fill="var(--office-cooler)" rx="2" />
+        <circle cx="0" cy="-15" r="9" fill="var(--office-water)" />
+        <rect x="-3" y="1" width="6" height="4" fill="var(--office-map-wall)" />
+      </g>
+    </>
+  )
+}
+
+function DeskLeft({ x, y }: { x: number; y: number }) {
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x="0" y="-20" width="60" height="40" fill="var(--office-desk)" rx="2" stroke="var(--office-desk-stroke)" />
+      <rect x="10" y="-6" width="18" height="12" fill="var(--office-monitor)" rx="1" />
+      <rect x="32" y="-4" width="6" height="8" fill="var(--office-monitor)" rx="1" />
+      <rect x="42" y="-12" width="12" height="24" fill="var(--office-screen)" rx="1" />
+      <circle cx="-15" cy="0" r="12" fill="var(--office-chair)" />
+      <path d="M-25 -10 Q-30 0 -25 10" stroke="var(--office-chair-stroke)" strokeWidth="4" fill="none" strokeLinecap="round" />
     </g>
   )
 }
 
-function Architecture() {
+function DeskRight({ x, y }: { x: number; y: number }) {
   return (
-    <>
-      <g
-        stroke="var(--office-map-wall)"
-        strokeLinecap="round"
-        strokeWidth="6"
-        fill="none"
-      >
-        <path d="M 20 400 L 20 20 L 880 20 L 880 400 L 750 400 M 650 400 L 480 400 M 380 400 L 210 400 M 110 400 L 20 400" />
-        <path d="M 300 20 L 300 400" />
-        <path d="M 590 20 L 590 400" />
-      </g>
-      <g
-        stroke="var(--office-map-detail)"
-        strokeWidth="1.5"
-        fill="none"
-        opacity="0.9"
-      >
-        <path d="M112 400 A88 88 0 0 1 200 312" />
-        <path d="M382 400 A84 84 0 0 1 466 316" />
-        <path d="M652 400 A84 84 0 0 1 736 316" />
-        <path d="M480 400 A76 76 0 0 1 556 324" />
-      </g>
-      <g fill="var(--office-map-fixture)" stroke="var(--office-map-detail)">
-        <rect x="40" y="120" width="30" height="140" rx="4" />
-        <rect x="338" y="160" width="72" height="44" rx="4" />
-        <rect x="482" y="160" width="72" height="44" rx="4" />
-        <rect x="628" y="160" width="72" height="44" rx="4" />
-        <rect x="772" y="160" width="72" height="44" rx="4" />
-      </g>
-    </>
+    <g transform={`translate(${x} ${y})`}>
+      <rect x="-60" y="-20" width="60" height="40" fill="var(--office-desk)" rx="2" stroke="var(--office-desk-stroke)" />
+      <rect x="-28" y="-6" width="18" height="12" fill="var(--office-monitor)" rx="1" />
+      <rect x="-38" y="-4" width="6" height="8" fill="var(--office-monitor)" rx="1" />
+      <rect x="-54" y="-12" width="12" height="24" fill="var(--office-screen)" rx="1" />
+      <circle cx="15" cy="0" r="12" fill="var(--office-chair)" />
+      <path d="M25 -10 Q30 0 25 10" stroke="var(--office-chair-stroke)" strokeWidth="4" fill="none" strokeLinecap="round" />
+    </g>
+  )
+}
+
+function Plant({ x, y }: { x: number; y: number }) {
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <path
+        d="M0 -15 L4 -5 L15 -4 L6 2 L10 12 L0 6 L-10 12 L-6 2 L-15 -4 L-4 -5 Z"
+        fill="var(--office-plant-dark)"
+        stroke="var(--office-plant-stroke)"
+        transform="rotate(15) scale(1.1)"
+      />
+      <path
+        d="M0 -15 L4 -5 L15 -4 L6 2 L10 12 L0 6 L-10 12 L-6 2 L-15 -4 L-4 -5 Z"
+        fill="var(--office-plant-light)"
+        stroke="var(--office-plant-stroke)"
+        transform="rotate(45) scale(0.9)"
+      />
+      <circle cx="0" cy="0" r="4" fill="var(--office-plant-stroke)" />
+    </g>
   )
 }
 
@@ -254,20 +436,19 @@ function RoomLayer({
     <g>
       <text
         x={blueprint.centerX}
-        y="50"
+        y={blueprint.labelY}
         fill="var(--office-map-label)"
-        fontSize="12"
+        fontSize="14"
         fontWeight="700"
-        letterSpacing="2"
         textAnchor="middle"
       >
         {blueprint.label.toUpperCase()}
       </text>
       <text
         x={blueprint.centerX}
-        y="72"
+        y={blueprint.labelY + 20}
         fill="var(--office-map-muted)"
-        fontSize="12"
+        fontSize="11"
         fontWeight="600"
         textAnchor="middle"
       >
@@ -370,8 +551,14 @@ function LightNode({
       <circle
         cx={point.x}
         cy={point.y}
-        r="10"
+        r="12"
         className="office-hardware-bulb"
+      />
+      <circle
+        cx={point.x}
+        cy={point.y}
+        r="6"
+        className="office-light-highlight"
       />
       <title>
         {point.label}: {device?.status ?? "unknown"}
@@ -440,25 +627,24 @@ function FanNode({
       <circle r="31" fill="transparent" className="office-device-hit-area" />
       <g
         className="office-fan-blade-group"
-        stroke={
-          active
-            ? "var(--office-map-fan-active)"
-            : "var(--office-map-device-idle)"
-        }
-        strokeLinecap="round"
-        strokeWidth="5"
         style={style}
       >
-        <line x1="0" y1="0" x2="0" y2="-26" />
-        <line x1="0" y1="0" x2="22" y2="13" />
-        <line x1="0" y1="0" x2="-22" y2="13" />
+        <path d="M-2 -5 C-8 -22 -12 -30 0 -30 C12 -30 8 -22 2 -5 Z" />
+        <path
+          d="M-2 -5 C-8 -22 -12 -30 0 -30 C12 -30 8 -22 2 -5 Z"
+          transform="rotate(120)"
+        />
+        <path
+          d="M-2 -5 C-8 -22 -12 -30 0 -30 C12 -30 8 -22 2 -5 Z"
+          transform="rotate(240)"
+        />
       </g>
       <circle
         cx="0"
         cy="0"
         r="6"
-        fill="var(--office-map-bg)"
-        stroke="var(--office-map-muted)"
+        fill="var(--office-fan-center)"
+        stroke="var(--office-fan-center-stroke)"
       />
       <title>
         {point.label}: {device?.status ?? "unknown"}
@@ -472,8 +658,8 @@ function DeviceHoverCard({ placement }: { placement: DevicePlacement }) {
   const { device, point, room } = placement
   const width = 168
   const height = 92
-  const x = Math.min(Math.max(point.x + 18, 10), 900 - width - 10)
-  const y = Math.min(Math.max(point.y - 38, 10), 480 - height - 10)
+  const x = Math.min(Math.max(point.x + 18, 10), 800 - width - 10)
+  const y = Math.min(Math.max(point.y - 38, 10), 540 - height - 10)
 
   return (
     <foreignObject
