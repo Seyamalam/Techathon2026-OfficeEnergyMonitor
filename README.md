@@ -8,6 +8,24 @@ Repository name target: `Techathon2026-Huntrix`
 
 The project goal is to monitor office lights and fans through one shared backend, a live animated web dashboard, and a Discord bot. The system uses simulated IoT device data because no physical hardware is required for the preliminary round.
 
+## Table Of Contents
+
+- [Problem Understanding](#problem-understanding)
+- [Required Features](#required-features)
+- [Architecture And Diagrams](#target-architecture)
+- [Tech Stack](#tech-stack)
+- [Dashboard Experience](#dashboard-experience)
+- [Backend Data Model](#backend-data-model)
+- [API](#api)
+- [Discord Bot Behavior](#discord-bot-behavior)
+- [AI Integration](#ai-integration)
+- [Repository Structure](#repository-structure)
+- [Environment Variables](#environment-variables)
+- [Local Development](#local-development)
+- [Docker Judge Setup](#docker-judge-setup)
+- [Diagrams And Hardware](#diagrams-and-hardware)
+- [Team Contributions](#team-contributions)
+
 ## Problem Understanding
 
 The office runs daily coordination through Discord, but lights and fans are often left running after people leave. The required solution should let users:
@@ -227,29 +245,37 @@ The prompt includes current room loads, active devices, office-hours state, kWh 
 
 ## Environment Variables
 
-Dashboard variables:
+The core dashboard works without any secret keys because the simulated backend lives inside the Next.js app. Discord and AI features need credentials only when you want to test those integrations.
 
-```text
-NEXT_PUBLIC_INSTANT_APP_ID=optional_instant_app_id
-NEXT_PUBLIC_INSTANT_API_URI=optional_self_hosted_instant_api_uri
-NEXT_PUBLIC_INSTANT_WEBSOCKET_URI=optional_self_hosted_instant_websocket_uri
-INSTANT_APP_ADMIN_TOKEN=optional_instant_admin_token
-INSTANT_API_URI=optional_self_hosted_instant_admin_api_uri
-OPENROUTER_API_KEY=optional_openrouter_key
-OPENROUTER_MODEL=openrouter/free
-```
+### Dashboard
 
-Bot variables:
+Copy `dashboard/.env.example` to `dashboard/.env.local` only if you want optional AI or InstantDB sync:
 
-```text
-DISCORD_TOKEN=your_bot_token
-BACKEND_URL=http://127.0.0.1:3000
-DISCORD_CHANNEL_ID=optional_alert_channel_id
-BOT_PREFIX=!
-ALERT_POLL_MS=10000
-OPENROUTER_API_KEY=optional_openrouter_key
-OPENROUTER_MODEL=openrouter/free
-```
+| Variable | Required? | Where to get it | Used for |
+| --- | --- | --- | --- |
+| `OPENROUTER_API_KEY` | Optional | OpenRouter dashboard: create an API key at `https://openrouter.ai/settings/keys` | AI Energy Coach and LLM-written bot-style copy |
+| `OPENROUTER_MODEL` | Optional | Use `openrouter/free` for this prototype | Chooses the OpenRouter model/router |
+| `NEXT_PUBLIC_INSTANT_APP_ID` | Optional | Instant dashboard app settings, hosted or self-hosted | Enables InstantDB client snapshot reads |
+| `INSTANT_APP_ADMIN_TOKEN` | Optional | Instant dashboard admin token/app settings | Enables backend writes to InstantDB |
+| `NEXT_PUBLIC_INSTANT_API_URI` | Optional | Self-hosted Instant backend URL, usually `http://localhost:8888` | Browser-facing Instant API endpoint |
+| `NEXT_PUBLIC_INSTANT_WEBSOCKET_URI` | Optional | Self-hosted Instant websocket URL, usually `ws://localhost:8888/runtime/session` | Browser-facing Instant realtime websocket |
+| `INSTANT_API_URI` | Optional | Self-hosted Instant backend URL; in Docker use `http://host.docker.internal:8888` | Server-side Instant admin API endpoint |
+
+### Discord Bot
+
+Copy `bot/.env.example` to `bot/.env` before running the bot:
+
+| Variable | Required? | Where to get it | Used for |
+| --- | --- | --- | --- |
+| `DISCORD_TOKEN` | Required for bot | Discord Developer Portal → your application → Bot → Reset/View Token | Logs the bot into Discord |
+| `DISCORD_CHANNEL_ID` | Optional | Discord: enable Developer Mode, right-click the target text channel, Copy Channel ID | Proactive alert posts |
+| `BACKEND_URL` | Required for bot commands | Local dashboard URL, Docker service URL, or deployed dashboard URL | Fetches shared live state |
+| `BOT_PREFIX` | Optional | Choose any prefix, default `!` | Command prefix |
+| `ALERT_POLL_SECONDS` | Optional | Any positive number, default `20` | Proactive alert polling interval |
+| `OPENROUTER_API_KEY` | Optional | Same OpenRouter key as dashboard | Natural-language Discord responses |
+| `OPENROUTER_MODEL` | Optional | Use `openrouter/free` | LLM model/router |
+| `INSTANT_APP_ID` | Optional | Instant app settings | Reserved for Instant-aware bot setup |
+| `INSTANT_APP_ADMIN_TOKEN` | Optional | Instant admin token | Reserved for Instant-aware bot setup |
 
 ## Local Development
 
