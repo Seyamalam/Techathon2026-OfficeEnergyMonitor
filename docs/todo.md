@@ -18,7 +18,7 @@ This file is kept as a final status note for reviewers. Active scratch tasks wer
 - Proactive Discord alert posting when a channel ID is configured.
 - Hand-authored SVG architecture diagrams.
 - Representative one-room Wokwi/ESP32 hardware concept.
-- Dockerfile and Docker Compose setup for judge-friendly local runs.
+- Dockerfile and Docker Compose setup for local review runs.
 - Self-hosted InstantDB local setup script using Docker.
 - 180-second demo video script in [demo-script.md](demo-script.md).
 - Team contribution breakdown in [team-contributions.md](team-contributions.md).

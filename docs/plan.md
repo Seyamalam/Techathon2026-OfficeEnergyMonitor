@@ -17,7 +17,7 @@ Build a fast, polished, real-time office energy monitoring system with:
 - No physical hardware is required.
 - A representative one-room circuit schematic is enough.
 - Office hours are 9 to 5 in Asia/Dhaka time.
-- The preliminary round is judged from the repository, documentation, code, and demo video.
+- The preliminary round is evaluated from the repository, documentation, code, and demo video.
 
 ## Scoring Strategy
 

@@ -10,7 +10,7 @@
     </style>
   </defs>
   <rect class="bg" width="1280" height="720" rx="30"/>
-  <text x="60" y="74" class="title">Deployment And Judge Setup</text>
+  <text x="60" y="74" class="title">Deployment And Local Setup</text>
   <text x="60" y="104" class="b">One repository supports local Docker review, Vercel dashboard deployment, and Discord bot testing.</text>
 
   <rect class="box" x="70" y="250" width="210" height="100" rx="18"/>

@@ -22,7 +22,7 @@ The project goal is to monitor office lights and fans through one shared backend
 - [Repository Structure](#repository-structure)
 - [Environment Variables](#environment-variables)
 - [Local Development](#local-development)
-- [Docker Judge Setup](#docker-judge-setup)
+- [Docker Setup](#docker-setup)
 - [Diagrams And Hardware](#diagrams-and-hardware)
 - [Team Contributions](#team-contributions)
 
@@ -228,8 +228,15 @@ The prompt includes current room loads, active devices, office-hours state, kWh 
 ├── docs/
 │   ├── assets/
 │   ├── architecture.md
+│   ├── demo-script.md
+│   ├── fan-design.html
 │   ├── hardware-schematic.md
+│   ├── instantdb-local-setup.md
 │   ├── plan.md
+│   ├── problem.md
+│   ├── room.html
+│   ├── Rulebook.md
+│   ├── submission-checklist.md
 │   ├── team-contributions.md
 │   └── todo.md
 ├── wokwi/
@@ -238,9 +245,7 @@ The prompt includes current room loads, active devices, office-hours state, kWh 
 │   └── README.md
 ├── Dockerfile
 ├── docker-compose.yml
-├── README.md
-├── Rulebook.md
-└── problem.md
+└── README.md
 ```
 
 ## Environment Variables
@@ -311,7 +316,7 @@ OPENROUTER_API_KEY=optional_openrouter_key
 OPENROUTER_MODEL=openrouter/free
 ```
 
-## Docker Judge Setup
+## Docker Setup
 
 Run the dashboard and shared backend in one command:
 
@@ -378,21 +383,12 @@ The in-app relay diagram, web dashboard, alert stream, and Discord bot all read 
 
 | Member | University | Primary Contribution |
 | --- | --- | --- |
-| Touhidul Alam Seyam | BGC Trust University Bangladesh | Dashboard, backend integration, Discord bot, AI integration |
+| Touhidul Alam Seyam | BGC Trust University Bangladesh | Team leader, dashboard, backend integration, Discord bot, AI integration |
 | Abtahee Kabir | Chittagong University of Engineering & Technology | Planning, IoT architecture, representative hardware/Wokwi direction |
 | Chandni Barua Jowthi | BGC Trust University Bangladesh | Documentation, setup validation, testing checklist |
 | Noore Tamanna Orny | Chittagong University of Engineering & Technology | Floor plan design, room layout review, visual refinement |
 
 See [docs/team-contributions.md](docs/team-contributions.md) for the detailed contribution breakdown.
-
-## Important Rulebook Notes
-
-- Repository must be public.
-- Repository should be created after the problem statement release.
-- Code must be original and attributed where needed.
-- AI coding assistants are allowed.
-- README must explain setup, architecture, technologies, API endpoints, and AI integration details if used.
-- Final submission includes GitHub link, demo video link, and team details.
 
 ## Attribution
 

@@ -6,14 +6,14 @@ Team name: **Huntrix**
 
 | Member | University | Primary Area |
 | --- | --- | --- |
-| Touhidul Alam Seyam | BGC Trust University Bangladesh | Dashboard and implementation |
+| Touhidul Alam Seyam | BGC Trust University Bangladesh | Team leader, dashboard, and implementation |
 | Abtahee Kabir | Chittagong University of Engineering & Technology | Planning and IoT |
 | Chandni Barua Jowthi | BGC Trust University Bangladesh | Documentation and testing |
 | Noore Tamanna Orny | Chittagong University of Engineering & Technology | Floor plan design |
 
 ## Contribution Breakdown
 
-### Touhidul Alam Seyam
+### Touhidul Alam Seyam - Team Leader
 
 - Implemented the Next.js dashboard and shared backend API.
 - Built the live office state simulator and power/alert calculations.
@@ -34,7 +34,7 @@ Team name: **Huntrix**
 - Owned documentation quality and submission-readiness checks.
 - Reviewed setup instructions for dashboard, backend, bot, and AI configuration.
 - Prepared testing responsibilities for dashboard live updates and bot command validation.
-- Helped keep the README, checklist, and demo flow understandable for judges.
+- Helped keep the README, checklist, and demo flow understandable for reviewers.
 
 ### Noore Tamanna Orny
 

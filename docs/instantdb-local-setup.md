@@ -47,7 +47,7 @@ INSTANT_API_URI=http://host.docker.internal:8888 \
 docker compose up --build dashboard
 ```
 
-The websocket URI is public browser-facing config, so `localhost:8888` is correct for a browser running on the judge machine. The admin API URI is server-side inside the Docker container, so it uses `host.docker.internal`.
+The websocket URI is public browser-facing config, so `localhost:8888` is correct for a browser running on the review machine. The admin API URI is server-side inside the Docker container, so it uses `host.docker.internal`.
 
 ## Official Reference
 

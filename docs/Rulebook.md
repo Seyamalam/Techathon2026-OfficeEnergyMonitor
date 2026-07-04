@@ -90,7 +90,7 @@ Consequences:
 
 Working Prototype: Project must be functional and runnable by end of hackathon Minimum Viable Product (MVP): Full feature list not required, but core functionality must work Problem Relevance: Solution must meaningfully address the given problem statement Quality over Quantity: Focus on quality implementation over 
 
-Acceptable: Application runnable with clear setup instructions on provided development machines Demo: Live demo must be possible during judging No Installation Barriers: Judges should not spend time 
+Acceptable: Application runnable with clear setup instructions on provided development machines Demo: Live demo must be possible during review No Installation Barriers: Reviewers should not spend time 
 
 12 
 
@@ -154,7 +154,7 @@ Q: What if I'm waiting for exam results?
 
 Q: When will I get feedback on my preliminary submission? 
 
-Q: Can judges ask questions about my code? 
+Q: Can reviewers ask questions about my code? 
 
 17 
 
@@ -191,4 +191,3 @@ Q: What if there's no electricity or internet?
 - Email: mashfquemehzad@iut dhaka.edu 
 
 19 
-
